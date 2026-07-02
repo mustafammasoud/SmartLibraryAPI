@@ -3,3 +3,24 @@
 ### Get all 
 
 GET {{baseURL}}/api/books
+
+###
+
+POST {{baseURL}}/api/authors
+Content-Type: application/json
+
+{
+    "name" : "John Smith"
+}
+
+###
+POST {{baseURL}}/api/authors
+Content-Type: application/json
+
+{
+    "name" : "Ahmed Shawki"
+}
+
+### 
+GET {{baseURL}}/api/authors
+
