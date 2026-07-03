@@ -26,7 +26,7 @@ public class AuthorService : IAuthorService
         };
 
         await _context.Authors.AddAsync(author,ct);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(ct);
 
         return new AuthorResponse
         {
