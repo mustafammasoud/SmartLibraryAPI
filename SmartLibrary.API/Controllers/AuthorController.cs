@@ -9,7 +9,7 @@ namespace SmartLibrary.API.Controllers;
 public class AuthorController:ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> AddingAuthor(
+    public async Task<IActionResult> CreatingAuthor(
                   [FromBody] CreateAuthorRequest request
                    ,[FromServices] IAuthorService service
                    , CancellationToken cn
@@ -18,4 +18,12 @@ public class AuthorController:ControllerBase
         var author = await service.CreateAsync(request,cn);
         return Created($"/api/authors/{author.Id}", author); 
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll(IAuthorService service, CancellationToken cn )
+    {
+        return Ok(await service.GetAllAsync(cn));
+    }
+
+
 }

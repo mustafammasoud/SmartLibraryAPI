@@ -20,10 +20,10 @@ var app = builder.Build();
 
 app.MapControllers();
 
-app.MapGet("/api/books", async(IBookService service) =>
-{
-    return await service.GetAllAsync();
-});
+// app.MapGet("/api/books", async(IBookService service) =>
+// {
+//     return await service.GetAllAsync();
+// });
 
 // app.MapPost("/api/authors",async (CreateAuthorRequest request, IAuthorService service,CancellationToken ct ) =>
 // {
@@ -33,9 +33,9 @@ app.MapGet("/api/books", async(IBookService service) =>
 // }
 // );
 
-app.MapGet("/api/authors" , async (IAuthorService service , CancellationToken ct) =>
-{
-    return Results.Ok (await service.GetAllAsync(ct));
-});
+// app.MapGet("/api/authors" , async (IAuthorService service , CancellationToken ct) =>
+// {
+//     return Results.Ok (await service.GetAllAsync(ct));
+// });
 
 app.Run();

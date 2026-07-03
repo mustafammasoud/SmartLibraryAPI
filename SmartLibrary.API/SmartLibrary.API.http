@@ -1,10 +1,22 @@
 @baseURL = http://localhost:5201
 
-### Get all 
+### Get all Books
 
 GET {{baseURL}}/api/books
 
-###
+
+### Create Book
+POST {{baseURL}}/api/books
+Content-Type: application/json
+
+{
+    "title" : "Clean-Code",
+    "description" : "This book about writing clean and clear code to easy to maintain and read",
+    "Year" : 2012,
+    "authorId" : "5c5d4d0e-3966-4d13-858c-bad032bceb1f"
+}
+
+### Create Author
 
 POST {{baseURL}}/api/authors
 Content-Type: application/json
@@ -13,7 +25,7 @@ Content-Type: application/json
     "name" : "John Smith"
 }
 
-###
+### Create Author
 POST {{baseURL}}/api/authors
 Content-Type: application/json
 
@@ -21,6 +33,7 @@ Content-Type: application/json
     "name" : "Ahmed Shawki"
 }
 
-### 
+### Get all Authors 
 GET {{baseURL}}/api/authors
+
 
