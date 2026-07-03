@@ -6,7 +6,7 @@ namespace SmartLibrary.Application.Interfaces;
 
 public interface IBookService
 {
-    Task<List<BookResponse>> GetAllAsync();
+    Task<List<BookResponse>> GetAllAsync(CancellationToken cn);
    // Task<BookResponse?> GetByIdAsync(Guid id);
-    //Task AddAsync(CreateBookRequest request);
+    Task<BookResponse> AddAsync(CreateBookRequest request,CancellationToken cn);
 }
