@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SmartLibrary.API.ExceptionHandlers;
 using SmartLibrary.Application.DTOs.Authors.Requests;
 using SmartLibrary.Application.Interfaces;
 using SmartLibrary.Infrastructure.Data;
@@ -7,6 +8,15 @@ using SmartLibrary.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
+builder.Services.AddProblemDetails(options =>
+{
+    options.CustomizeProblemDetails = (context) =>
+    {
+        context.ProblemDetails.Instance = $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
+        context.ProblemDetails.Extensions.Add("requestId",context.HttpContext.TraceIdentifier);
+    };
+});
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddScoped<IBookService,BookService>();
 builder.Services.AddScoped<IAuthorService , AuthorService>();
@@ -17,6 +27,9 @@ builder.Services.AddDbContext<AppDbContext>(
 
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
+app.UseStatusCodePages();
 
 app.MapControllers();
 
