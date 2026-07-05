@@ -12,10 +12,20 @@ Content-Type: application/json
 {
     "title" : "Clean-Code",
     "description" : "This book about writing clean and clear code to easy to maintain and read",
-    "Year" : 2012,
+    "Year" : -1,
     "authorId" : "5c5d4d0e-3966-4d13-858c-bad032bceb1f"
 }
 
+### Create Book
+POST {{baseURL}}/api/books
+Content-Type: application/json
+
+{
+    "title" : "Clean-Architecture",
+    "description" : "This book about writing a Code with A layered Architecture",
+    "Year" : -1,
+    "authorId" : "7d055109-b708-46fc-bd09-1014f0c2fae4"
+}
 ### Create Author
 
 POST {{baseURL}}/api/authors
@@ -32,6 +42,15 @@ Content-Type: application/json
 {
     "name" : "Ahmed Shawki"
 }
+
+
+### Create Author
+# POST {{baseURL}}/api/authors
+# Content-Type: application/json
+
+# {
+#     "name" : ""
+# }
 
 ### Get all Authors 
 GET {{baseURL}}/api/authors

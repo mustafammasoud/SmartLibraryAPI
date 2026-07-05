@@ -1,3 +1,5 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using SmartLibrary.API.ExceptionHandlers;
 using SmartLibrary.Application.DTOs.Authors.Requests;
@@ -8,6 +10,8 @@ using SmartLibrary.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateAuthorRequest>();
 builder.Services.AddProblemDetails(options =>
 {
     options.CustomizeProblemDetails = (context) =>
