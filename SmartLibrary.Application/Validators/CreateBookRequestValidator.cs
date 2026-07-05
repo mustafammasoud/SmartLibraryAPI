@@ -15,10 +15,10 @@ public class CreateBookRequestValidator: AbstractValidator<CreateBookRequest>
         .Length(1,1000);
 
         RuleFor( y => y.Year)
-        .Must(MaxCurrentYear);
+        .Must(IsValidPublishYear);
     }
 
-    private bool MaxCurrentYear(int year)
+    private bool IsValidPublishYear(int year)
     {
         return year >=1 && year <= DateTime.Now.Year;
     }
