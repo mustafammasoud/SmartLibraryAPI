@@ -1,6 +1,8 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using SmartLibrary.API.ExceptionHandlers;
 using SmartLibrary.Application.DTOs.Authors.Requests;
 using SmartLibrary.Application.Interfaces;
@@ -9,6 +11,31 @@ using SmartLibrary.Infrastructure.Services;
 // using SmartLibrary.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddAuthentication(Options =>
+{
+    Options.DefaultAuthenticateScheme =
+                 CookieAuthenticationDefaults.AuthenticationScheme;
+
+    Options.DefaultChallengeScheme = 
+                 CookieAuthenticationDefaults.AuthenticationScheme;
+
+    Options.DefaultForbidScheme =
+                 CookieAuthenticationDefaults.AuthenticationScheme;
+    
+}).AddCookie(Options =>
+{
+    Options.LoginPath = "/login";
+    Options.AccessDeniedPath = "/access-denied";
+
+    Options.Cookie.HttpOnly = true;
+
+    Options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+
+    Options.Cookie.SameSite = SameSiteMode.Lax;
+});
+
+
+
 builder.Services.AddControllers();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateAuthorRequest>();
@@ -34,6 +61,9 @@ var app = builder.Build();
 
 app.UseExceptionHandler();
 app.UseStatusCodePages();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

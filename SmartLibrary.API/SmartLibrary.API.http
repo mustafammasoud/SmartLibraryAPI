@@ -56,3 +56,20 @@ Content-Type: application/json
 GET {{baseURL}}/api/authors
 
 
+
+
+###
+
+POST {{baseURL}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "12345"
+}
+
+###
+GET {{baseURL}}/api/auth/me
+
+###
+POST {{baseURL}}/api/auth/logout
