@@ -3,14 +3,24 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using LoginRequest = SmartLibrary.Application.DTOs.Authentication.Requests.LoginRequest;
+using SmartLibrary.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 namespace SmartLibrary.API.Controllers;
 
 [ApiController]
 [Route("/api/auth")]
 public class AuthController:ControllerBase
 {
+   private readonly IJwtTokenService _jwtTokenService;
+
+   public AuthController(IJwtTokenService jwtTokenService)
+   {
+     _jwtTokenService = jwtTokenService;
+   }
+
+
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginRequest request)
+    public IActionResult Login(LoginRequest request)
     {
         if(request.Username != "admin" || request.Password != "12345")
             return Unauthorized();
@@ -23,23 +33,29 @@ public class AuthController:ControllerBase
             new Claim(ClaimTypes.Role, "Admin")
         };
 
-        var identity = new ClaimsIdentity(
-            claims,
-            CookieAuthenticationDefaults.AuthenticationScheme
-        );
-
-        var principal = new ClaimsPrincipal(identity);
-
-        await HttpContext.SignInAsync(
-            CookieAuthenticationDefaults.AuthenticationScheme,
-            principal
-        );
+        var token = _jwtTokenService.GenerateToken(claims);
+        
         return Ok(
             new
             {
-                Message = "Login Success"
+                token
             }
         );
+    }
+
+    [HttpGet("profile")]
+    [Authorize]
+    public IActionResult Profile()
+    {
+        return Ok(new 
+        {
+            User.Identity?.Name,
+            User.Identity?.IsAuthenticated,
+
+            Id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+            Email = User.FindFirst(ClaimTypes.Email)?.Value,
+            Role = User.FindFirst(ClaimTypes.Role)?.Value
+        });
     }
 
     [HttpPost("logout")]

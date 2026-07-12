@@ -8,30 +8,38 @@ using SmartLibrary.Application.DTOs.Authors.Requests;
 using SmartLibrary.Application.Interfaces;
 using SmartLibrary.Infrastructure.Data;
 using SmartLibrary.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 // using SmartLibrary.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAuthentication(Options =>
 {
-    Options.DefaultAuthenticateScheme =
-                 CookieAuthenticationDefaults.AuthenticationScheme;
-
-    Options.DefaultChallengeScheme = 
-                 CookieAuthenticationDefaults.AuthenticationScheme;
-
-    Options.DefaultForbidScheme =
-                 CookieAuthenticationDefaults.AuthenticationScheme;
-    
-}).AddCookie(Options =>
+    Options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    Options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    Options.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options=>
 {
-    Options.LoginPath = "/login";
-    Options.AccessDeniedPath = "/access-denied";
+      var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 
-    Options.Cookie.HttpOnly = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+      
+        ValidateIssuer = true,
+        ValidIssuer = jwtSettings["Issuer"],
 
-    Options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        ValidateAudience = true,
+         ValidAudience = jwtSettings["Audience"],
 
-    Options.Cookie.SameSite = SameSiteMode.Lax;
+  
+        ValidateIssuerSigningKey = true, // "تحقق من صحة التوقيع (Signature) باستخدام مفتاح التوقيع (Signing Key)
+        IssuerSigningKey = new SymmetricSecurityKey(
+                     Encoding.UTF8.GetBytes(jwtSettings["Key"]!)),
+            
+      ValidateLifetime = true,
+
+    };
 });
 
 
@@ -51,6 +59,7 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddScoped<IBookService,BookService>();
 builder.Services.AddScoped<IAuthorService , AuthorService>();
+builder.Services.AddScoped<IJwtTokenService,JwtTokenService>(); 
 
 builder.Services.AddDbContext<AppDbContext>(
  options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
