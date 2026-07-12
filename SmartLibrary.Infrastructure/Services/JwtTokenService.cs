@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using SmartLibrary.Application.DTOs.Authentication.Jwt;
 using SmartLibrary.Application.Interfaces;
 
 namespace SmartLibrary.Infrastructure.Services;
@@ -40,6 +41,6 @@ public class JwtTokenService : IJwtTokenService
 
        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
-       return jwt;
+      return jwt;
     }
 }
